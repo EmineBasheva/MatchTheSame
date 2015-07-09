@@ -10,10 +10,10 @@ class TypeBall(Enum):
 
 
 class Ball:
-    def __init__(self, type_ball, color, position):
-        self.__color = color
-        self.__position = position
+    def __init__(self, type_ball, color):
         self.__type = type_ball
+        self.__color = color
+        # self.__position = position
 
     def type_b(self):
         return self.__type
@@ -29,3 +29,12 @@ class Ball:
 
     def __str__(self):
         return "{} ball".format(self.__color)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __eq__(self, other):
+        return self.__type == other.__type and self.__color == other.__color
+
+    def __hash__(self):
+        return hash(self.__str__())

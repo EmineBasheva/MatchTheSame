@@ -42,16 +42,15 @@ class Board:
         pass
 
     def _is_same(self, x_1, y_1, x_2, y_2):
-        try:
-            if (self._is_not_valid_coords(x_1, y_1) or
-                self._is_not_valid_coords(x_2, y_2)):
-                return False
-            else:
-                print(x_1, y_1, "===", x_2, y_2)
-            return self.all_positions[x_1][y_1] == self.all_positions[x_2][y_2]
-        except Exception:
-            print("width, height: ", self.__width, self.__height)
-            print(x_1, y_1, "---", x_2, y_2)
+        # try:
+        if (self._is_not_valid_coords(x_1, y_1) or
+            self._is_not_valid_coords(x_2, y_2)):
+            return False
+        return self.all_positions[x_1][y_1] == self.all_positions[x_2][y_2]
+        # except Exception:
+        #     print(self.all_positions)
+        #     print("width, height: ", self.__width, self.__height)
+        #     print(x_1, y_1, "---", x_2, y_2)
 
     def has_same_in_neighbours(self, current, neighbours):
         curr_x = current[0]
@@ -76,7 +75,7 @@ class Board:
         all_coords = {
             (x, y) for x in range(0, self.__height) for y in range(0, self. __width)
         }
-    #     # print("all_coords:", all_coords)
+        # print("all_coords:", all_coords)
         while set(all_coords) != passed:
 
             if not self.has_same_in_neighbours((pos_x, pos_y), neighbours):
@@ -91,8 +90,8 @@ class Board:
 
                 if neighbour in passed:
                     continue
-    #             # print("x, y: ", x, y, " --- pos_x, pos_y: ", pos_x, pos_y)
-                if self._is_same(x, y, pos_x, pos_y): #all_positions[x][y] == self.all_positions[pos_x][pos_y]:
+                # print("x, y: ", x, y, " --- pos_x, pos_y: ", pos_x, pos_y)
+                if self._is_same(x, y, pos_x, pos_y): 
                         group.add((x, y))
 
                 passed.add(neighbour)
@@ -116,7 +115,7 @@ class Board:
                         continue
                     new_neighbours.add(neigh)
 
-    #         # print("neighbours: ", neighbours)
+            # print("neighbours: ", neighbours)
             neighbours = new_neighbours.difference(passed)
 
         return group

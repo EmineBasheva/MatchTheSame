@@ -9,19 +9,28 @@ class BoardTest(unittest.TestCase):
         self.boarD = Board(8, 3)
 
     def test_start_all_positions(self):
-        answer = [[None] * 8] * 3
+        answer = [
+            [None, None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None, None]
+        ]
         self.assertEqual(self.boarD.all_positions, answer)
+
+    def test_fill(self):
+        self.boarD.fill()
+        answer = len([[Ball(TypeBall.simple, 'red')] * 8] * 3)
+        self.assertEqual(len(self.boarD.all_positions), answer)
+
+    def test_fill_in(self):
+        self.boarD.fill()
+        answer = len(([[Ball(TypeBall.simple, 'red')] * 8] * 3)[1])
+        self.assertEqual(len(self.boarD.all_positions[0]), answer)
 
     def test_is_not_valid_coords_False(self):
         self.assertFalse(self.boarD._is_not_valid_coords(2, 7))
 
     def test_is_not_valid_coords_True(self):
         self.assertTrue(self.boarD._is_not_valid_coords(7, 2))
-
-    # def test_fill(self):
-    #     self.boarD.fill()
-    #     answer = [[Ball(TypeBall.simple, 'red')] * 8] * 3
-    #     self.assertEqual(self.boarD.all_positions, answer)
 
     def test_neighbours_for(self):
         self.boarD.fill()
@@ -47,7 +56,7 @@ class BoardTest(unittest.TestCase):
 class BoardTestGroupFor(unittest.TestCase):
 
     def setUp(self):
-        self.b = Board(4, 5)
+        self.b = Board(5, 4)
         self.b.all_positions = [
             [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green'),
              Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'orange'),
@@ -70,9 +79,9 @@ class BoardTestGroupFor(unittest.TestCase):
         neighbours = self.b.neighbours_for(3, 0)
         self.assertTrue(self.b.has_same_in_neighbours((3, 0), neighbours))
 
-    # def test_has_same_in_neighbours_3_0_False(self):
-    #     neighbours = {(1, 0), (2, 1), (2, 2), (2, 3), (3, 3)}
-    #     self.assertFalse(self.b.has_same_in_neighbours((3, 0), neighbours))
+    def test_has_same_in_neighbours_3_0_False(self):
+        neighbours = {(1, 0), (2, 1), (2, 2), (2, 3), (3, 3)}
+        self.assertFalse(self.b.has_same_in_neighbours((3, 0), neighbours))
 
     # def test_has_same_in_neighbours_2_1(self):
     #     neighbours = self.b.neighbours_for(2, 1)
@@ -90,10 +99,10 @@ class BoardTestGroupFor(unittest.TestCase):
     #     neighbours = {(0, 1), (0, 2), (1, 3), (2, 2)}
     #     self.assertTrue(self.b.has_same_in_neighbours((1, 2), neighbours))
 
-#     def test_group_for_3_0(self):
-#         group = self.b.group_for(3, 0)
-#         answer = {(3, 0), (2, 0), (3, 2), (3, 1)}
-#         self.assertEqual(group, answer)
+    def test_group_for_3_0(self):
+        group = self.b.group_for(3, 0)
+        answer = {(3, 0), (2, 0), (3, 2), (3, 1)}
+        self.assertEqual(group, answer)
 
     def test_gorup_for_3_3(self):
         group = self.b.group_for(3, 3)

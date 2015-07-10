@@ -83,21 +83,21 @@ class BoardTestGroupFor(unittest.TestCase):
         neighbours = {(1, 0), (2, 1), (2, 2), (2, 3), (3, 3)}
         self.assertFalse(self.b.has_same_in_neighbours((3, 0), neighbours))
 
-    # def test_has_same_in_neighbours_2_1(self):
-    #     neighbours = self.b.neighbours_for(2, 1)
-    #     self.assertTrue(self.b.has_same_in_neighbours((2, 1), neighbours))
+    def test_has_same_in_neighbours_2_1(self):
+        neighbours = self.b.neighbours_for(2, 1)
+        self.assertTrue(self.b.has_same_in_neighbours((2, 1), neighbours))
 
-    # def test_has_same_in_neighbours_2_1_False(self):
-    #     neighbours = {(1, 0), (0, 1), (1, 2), (2, 3)}
-    #     self.assertFalse(self.b.has_same_in_neighbours((2, 1), neighbours))
+    def test_has_same_in_neighbours_2_1_False(self):
+        neighbours = {(1, 0), (0, 1), (1, 2), (2, 3)}
+        self.assertFalse(self.b.has_same_in_neighbours((2, 1), neighbours))
 
-    # def test_has_same_in_neighbours_1_2(self):
-    #     neighbours = self.b.neighbours_for(1, 2)
-    #     self.assertFalse(self.b.has_same_in_neighbours((1, 2), neighbours))
+    def test_has_same_in_neighbours_1_2(self):
+        neighbours = self.b.neighbours_for(1, 2)
+        self.assertFalse(self.b.has_same_in_neighbours((1, 2), neighbours))
 
-    # def test_has_same_in_neighbours_1_2_True(self):
-    #     neighbours = {(0, 1), (0, 2), (1, 3), (2, 2)}
-    #     self.assertTrue(self.b.has_same_in_neighbours((1, 2), neighbours))
+    def test_has_same_in_neighbours_1_2_True(self):
+        neighbours = {(0, 1), (0, 2), (1, 3), (2, 2)}
+        self.assertTrue(self.b.has_same_in_neighbours((1, 2), neighbours))
 
     def test_group_for_3_0(self):
         group = self.b.group_for(3, 0)
@@ -134,6 +134,15 @@ class BoardTestGroupFor(unittest.TestCase):
         answer = {(0, 2), (0, 3)}
         self.assertEqual(group, answer)
 
+    def test_has_group_for_2_0_True(self):
+        self.assertTrue(self.b.has_group_for(2, 0))
+
+    def test_has_group_for_1_2_False(self):
+        self.assertFalse(self.b.has_group_for(1, 2))
+
+    def test_has_group_big(self):
+        self.assertTrue(self.b.has_group())
+
 
 class BoardTestAlone(unittest.TestCase):
 
@@ -147,6 +156,53 @@ class BoardTestAlone(unittest.TestCase):
         group = b.group_for(0, 0)
         answer = {(0, 0), (0, 1)}
         self.assertEqual(group, answer)
+
+    def test_has_group_False(self):
+        b = Board(2, 3)
+        b.all_positions = [
+            [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'orange')],
+            [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
+        ]
+        self.assertFalse(b.has_group())
+
+    def test_set_table_with_group(self):
+        b = Board(2, 3)
+        b.all_positions = [
+            [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'orange')],
+            [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
+        ]
+        b.set_table_with_group()
+        self.assertTrue(b.has_group())
+
+    def test_kill_the_group_for_without_None(self):
+        b = Board(2, 3)
+        b.all_positions = [
+            [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
+        ]
+        b.kill_the_group_for(0, 1)
+        count_None = 0
+        for row in b.all_positions:
+            for elem in row:
+                if elem is None:
+                    count_None += 1
+
+        self.assertEqual(count_None, 0)
+
+    def test_kill_the_group_for(self):
+        b = Board(2, 3)
+        b.all_positions = [
+            [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'green')],
+            [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
+        ]
+        b.kill_the_group_for(0, 1)
+        self.assertTrue(b.all_positions[1][0] == Ball(TypeBall.simple, 'orange') and
+            b.all_positions[2][0] == Ball(TypeBall.simple, 'yellow'))
+
 
 if __name__ == '__main__':
     unittest.main()

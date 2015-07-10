@@ -1,8 +1,14 @@
 from ball import TypeBall, Ball
 import random
+from settings import MAX_TIME
 
 
 class Board:
+
+    NAME = ''
+    POINTS = 0
+    TIME = MAX_TIME
+
     def __init__(self, width, height):
         self.__width = width
         self.__height = height
@@ -38,8 +44,18 @@ class Board:
 
         return set(neighbours)
 
+    def has_group_for(self, x, y):
+        return len(self.group_for(x, y)) > 2
+
     def has_group(self):
-        pass
+        all_coords = {
+            (x, y) for x in range(0, self.__height) for y in range(0, self. __width)
+        }
+        for coord in all_coords:
+            x, y = coord
+            if self.has_group_for(x, y):
+                return True
+        return False
 
     def _is_same(self, x_1, y_1, x_2, y_2):
         # try:
@@ -120,16 +136,65 @@ class Board:
 
         return group
 
+    def set_table_with_group(self):
+        rand_x = random.randint(0, self.__height - 1)
+        rand_y = random.randint(0, self.__width - 1)
+        rand_ball_position = rand_x, rand_y
+        neighbours = self.neighbours_for(rand_x, rand_y)
+        neighbours_number = random.randint(2, 4)
+
+        for i in range(0, 3):
+            if len(neighbours) > 0:
+                to_be_changed = neighbours.pop()
+                x, y = to_be_changed
+                self.all_positions[x][y] = self.all_positions[rand_x][rand_y]
 
     def fill(self):
         for i in range(0, self.__height):
             for j in range(0, self.__width):
                 # self.all_positions[i][j] = Ball(TypeBall.simple, 'red')
                 self.all_positions[i][j] = self.__get_random_ball()
-        # for position in self.all_positions:
-        #     self.all_positions[position] = self.__get_random_ball(position)
-        # if not self.has_group():
-        #     rand_x = random.randint(0, self.__width - 1)
-        #     rand_y = random.randint(0, self.__height - 1)
-        #     rand_ball_position = rand_x, rand_y
-        #     # part of neighbours to be same type if not special ball
+        if not self.has_group():
+            self.set_table_with_group()
+
+    def kill_the_group_for(self, x, y):
+        if self._is_not_valid_coords(x, y):
+            return False
+
+        if len(self.group_for(x, y)) < 3:
+            self.TIME -= 3
+            return
+
+        group = self.group_for(x, y)
+        self.POINTS += len(group)
+        self.TIME = min(self.TIME + 2, MAX_TIME)
+
+        for elem in group:
+            x_elem, y_elem = elem
+            self.all_positions[x_elem][y_elem] = None
+
+        for i in range(self.__height - 1, -1, -1):
+            for j in range(self.__width - 1, -1, -1):
+                if self.all_positions[i][j] is None and i > 0:
+                    k = 1
+                    while self.all_positions[i][j] is None and (i - k > -1):
+                        self.all_positions[i][j] = self.all_positions[i - k][j]
+                        k += 1
+                        if i - k <= -1:
+                            break
+                        # self.all_positions[i - 1][j] = None
+                    self.all_positions[i - k + 1][j] = None
+
+        for i in range(0, self.__height):
+            for j in range(0, self.__width):
+                if self.all_positions[i][j] is None:
+                    self.all_positions[i][j] = self.__get_random_ball()
+
+        if not self.has_group():
+            self.set_table_with_group()
+
+    def save(self):
+        pass
+
+    def show_classification(self):
+        pass

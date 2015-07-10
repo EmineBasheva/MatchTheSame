@@ -8,15 +8,10 @@ class Board:
         self.__height = height
 
         self.all_positions = list()
-        # print("width, height: ", self.__width, self.__height)
         for i in range(0, self.__height):
             self.all_positions.append([])
             for j in range(0, self.__width):
                 self.all_positions[i].append(None)
-
-    def _is_not_valid_coords(self, x, y):
-        return ((0 > x or x >= self.__height) 
-                or (0 > y  or y >= self.__width))
 
     def __get_random_ball(self):
         colors = ["red", "blue", "green", "yellow", "orange", "pink"]
@@ -32,7 +27,8 @@ class Board:
         for dx in neighbours_dx:
             coord_x = position_x + dx[0]
             coord_y = position_y + dx[1]
-            if self._is_not_valid_coords(coord_x, coord_y):
+            if ((0 > coord_x or coord_x >= self.__width) 
+                or (0 > coord_y  or coord_y >= self.__height)):
                 continue
             neighbours.append((coord_x, coord_y))
 
@@ -43,15 +39,9 @@ class Board:
 
     def _is_same(self, x_1, y_1, x_2, y_2):
         try:
-            if (self._is_not_valid_coords(x_1, y_1) or
-                self._is_not_valid_coords(x_2, y_2)):
-                return False
-            else:
-                print(x_1, y_1, "===", x_2, y_2)
             return self.all_positions[x_1][y_1] == self.all_positions[x_2][y_2]
         except Exception:
-            print("width, height: ", self.__width, self.__height)
-            print(x_1, y_1, "---", x_2, y_2)
+            print(x_1, y_1, x_2, y_2)
 
     def has_same_in_neighbours(self, current, neighbours):
         curr_x = current[0]
@@ -66,8 +56,6 @@ class Board:
         return False
 
     def group_for(self, pos_x, pos_y):
-        if self._is_not_valid_coords(pos_x, pos_y):
-            return False
         group = set()
         group.add((pos_x, pos_y))
         passed = set()
@@ -76,7 +64,7 @@ class Board:
         all_coords = {
             (x, y) for x in range(0, self.__height) for y in range(0, self. __width)
         }
-    #     # print("all_coords:", all_coords)
+        # print("all_coords:", all_coords)
         while set(all_coords) != passed:
 
             if not self.has_same_in_neighbours((pos_x, pos_y), neighbours):
@@ -86,12 +74,9 @@ class Board:
                 x = neighbour[0]
                 y = neighbour[1]
 
-                if self._is_not_valid_coords(x, y):
-                    continue
-
                 if neighbour in passed:
                     continue
-    #             # print("x, y: ", x, y, " --- pos_x, pos_y: ", pos_x, pos_y)
+                # print("x, y: ", x, y, " --- pos_x, pos_y: ", pos_x, pos_y)
                 if self._is_same(x, y, pos_x, pos_y): #all_positions[x][y] == self.all_positions[pos_x][pos_y]:
                         group.add((x, y))
 
@@ -103,20 +88,12 @@ class Board:
             for neighbour in same_neighbours:
                 x = neighbour[0]
                 y = neighbour[1]
-
-                if self._is_not_valid_coords(x, y):
-                    continue
-
                 neighbour_neighbours = self.neighbours_for(x, y)
 
                 for neigh in neighbour_neighbours:
-                    n_x, n_y = neigh
-                    
-                    if self._is_not_valid_coords(n_x, n_y):
-                        continue
                     new_neighbours.add(neigh)
 
-    #         # print("neighbours: ", neighbours)
+            # print("neighbours: ", neighbours)
             neighbours = new_neighbours.difference(passed)
 
         return group

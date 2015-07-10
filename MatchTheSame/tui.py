@@ -25,7 +25,7 @@ def print_board(board):
 
 def main():
     
-    boarD = Board(4, 5)
+    boarD = Board(2, 3)
     boarD.fill()
     # boarD.all_positions = [
     #         [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green'),
@@ -43,11 +43,11 @@ def main():
     #     ]
     print_board(boarD)
 
-    x = input("enter X > ")
-    y = input("enter Y > ")
+    # x = input("enter X > ")
+    # y = input("enter Y > ")
 
-    print(boarD.group_for(int(x), int(y)))
-    print(symbol_for_color[boarD.all_positions[int(x)][int(y)].color()])
+    # print(boarD.group_for(int(x), int(y)))
+    # print(symbol_for_color[boarD.all_positions[int(x)][int(y)].color()])
 
 
 if __name__ == '__main__':

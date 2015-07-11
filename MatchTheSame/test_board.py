@@ -72,6 +72,15 @@ class BoardTestGroupFor(unittest.TestCase):
              Ball(TypeBall.simple, 'yellow')]
         ]
 
+    def test_type_of_same_balls(self):
+        self.assertEqual(self.b.all_positions[0][0].type_b(), 
+                        self.b.all_positions[0][1].type_b())
+
+    def test_type_for_sample(self):
+        print(self.b.all_positions[0][0].type_b())
+        self.assertEqual(self.b.all_positions[0][0].type_b(),
+                        TypeBall.simple)
+
     def test_is_same_3_3_and_2_3(self):
         self.assertTrue(self.b._is_same(3, 3, 2, 3))
 
@@ -192,16 +201,16 @@ class BoardTestAlone(unittest.TestCase):
 
         self.assertEqual(count_None, 0)
 
-    def test_kill_the_group_for(self):
-        b = Board(2, 3)
-        b.all_positions = [
-            [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
-            [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'green')],
-            [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
-        ]
-        b.kill_the_group_for(0, 1)
-        self.assertTrue(b.all_positions[1][0] == Ball(TypeBall.simple, 'orange') and
-            b.all_positions[2][0] == Ball(TypeBall.simple, 'yellow'))
+    # def test_kill_the_group_for(self):
+    #     b = Board(2, 3)
+    #     b.all_positions = [
+    #         [Ball(TypeBall.simple, 'green'), Ball(TypeBall.simple, 'green')],
+    #         [Ball(TypeBall.simple, 'orange'), Ball(TypeBall.simple, 'green')],
+    #         [Ball(TypeBall.simple, 'yellow'), Ball(TypeBall.simple, 'green')]
+    #     ]
+    #     b.kill_the_group_for(0, 1)
+    #     self.assertTrue(b.all_positions[1][0] == Ball(TypeBall.simple, 'orange') and
+    #         b.all_positions[2][0] == Ball(TypeBall.simple, 'yellow'))
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from board import Board
 from ball import TypeBall, Ball
+from termcolor import colored
 
 
 symbol_for_color = {
@@ -7,8 +8,12 @@ symbol_for_color = {
     "blue": 'O',
     "green": '@',
     "yellow": '#',
-    "orange": 'Ж',
-    "pink": 'Ф'
+    "cyan": 'Ж',
+    "magenta": 'Ф',
+    "multicolored": '©',
+    "black": 'ᚍ',
+    "star": '♦'
+    # "numbered": ''
 }
 
 
@@ -19,7 +24,27 @@ def print_board(board):
     for i in range(0, len(board.all_positions)):
         row = []
         for j in range(0, len(board.all_positions[0])):
-            row.append(symbol_for_color[board.all_positions[i][j].color()])
+            if board.all_positions[i][j].type_b() == TypeBall.simple:
+                symbol = symbol_for_color[board.all_positions[i][j].color()]
+                color = board.all_positions[i][j].color()
+                row.append(colored(symbol, color))
+
+            elif board.all_positions[i][j].type_b() == TypeBall.multicolored:
+                symbol = symbol_for_color["multicolored"]
+                row.append(colored(symbol, "white"))
+
+            elif board.all_positions[i][j].type_b() == TypeBall.black:
+                symbol = symbol_for_color["black"]
+                row.append(colored(symbol, "white", "on_white"))
+
+            elif board.all_positions[i][j].type_b() == TypeBall.star:
+                symbol = symbol_for_color["star"]
+                color = board.all_positions[i][j].color()
+                row.append(colored(symbol, color))
+
+            elif board.all_positions[i][j].type_b() == TypeBall.numbered:
+                symbol = board.all_positions[i][j].color()
+                row.append(colored(symbol, "white"))
         print(' '*20, ' '.join(row))
 
 
@@ -40,8 +65,15 @@ def main():
         boarD.TIME -= 1
         print(boarD.NAME + ": ", boarD.POINTS, "[ time:", boarD.TIME, "]")
 
+    boarD.save_classification()
     print(' '*10, "END OF GAME!!!")
     print("Points:", boarD.POINTS)
+    classification = boarD.classification()
+    count = 1
+    for elem in classification:
+        id, name, points = elem
+        print(count, "|", name, "|", points)
+        count += 1
 
     # boarD = Board(7, 4)
     # boarD.fill()
